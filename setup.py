@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='scrapertype_scrapername',
+    name='scr',
     version='1.0.0',
     packages=find_packages(),
     url='',
@@ -20,10 +20,11 @@ setup(
         "pandas>=1.4.2",
         "fastparquet>=0.8.1",
         "pyarrow>=10.0.1",
+        "scrapy>=2.8.0",
     ],
     entry_points={
         'console_scripts': [
-            "execute-scraper=scrapertype_scrapername.main:main"
+            "scrape-url=main:main"
         ]
     },
     include_package_data=True
