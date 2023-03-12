@@ -32,7 +32,14 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
             yield scrapy.Request(url=random_websites_parameters, callback=self.parse)
 
         else:
-            yield scrapy.Request(url=self._input_url, callback=self.parse)
+            if ',' in self._input_url:
+                split_urls = self._input_url.split(',')
+                for url_to_scrape in split_urls:
+                    yield scrapy.Request(url=url_to_scrape, callback=self.parse)
+
+            else:
+
+                yield scrapy.Request(url=self._input_url, callback=self.parse)
 
     def parse(self, response, **kwargs):
         print('COLLECTING>> ', response.url)

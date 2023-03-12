@@ -32,7 +32,6 @@ def main(url: str):
 
     from scrapy.crawler import CrawlerProcess
     from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
-    from websites_scraper.spiders.google_contact_search import GoogleContactSearchSpider
 
     process = CrawlerProcess(settings={'BOT_NAME': 'websites_scraper',
                                        'ROBOTSTXT_OBEY': False,
@@ -53,12 +52,7 @@ def main(url: str):
 
                              )
 
-    # process = CrawlerProcess()
-
-    """process.crawl(GoogleContactSearchSpider)
-    process.start()"""
-
-    process.crawl(WebsitesDataCollectionSpider, None)
+    process.crawl(WebsitesDataCollectionSpider, url)
     process.start()
 
 
@@ -111,4 +105,4 @@ def parameter_creation(search_string: str):
 
 
 if __name__ == '__main__':
-    parameter_creation()
+    main()
