@@ -51,9 +51,9 @@ def main(url: str,
             'https://www.oakley.com', 'https://www.latimes.com', 'https://www.dmoz.org',
             'https://www.msu.edu', 'https://www.yahoo.com', 'https://www.auda.org.au']
 
-    urls = ['https://support.google.com/business/answer/7690269?hl=en']
-    urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
-    urls = ['https://en.wikivoyage.org/wiki/Wikivoyage:Phone_numbers']
+    #urls = ['https://support.google.com/business/answer/7690269?hl=en']
+    #urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
+    #urls = ['https://www.bb.com.br/site/pra-voce/atendimento/']
 
     process.crawl(WebsitesDataCollectionSpider, urls)
     process.start()

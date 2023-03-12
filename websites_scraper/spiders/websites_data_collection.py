@@ -35,9 +35,18 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
     def parse(self, response, **kwargs):
         print('COLLECTING>> ', response.url)
         parsed_url = response.url
+
+        logo_url = response.css('link[rel="shortcut icon"]::attr(href)').extract_first()
+        print(logo_url)
+
+        logo_image_url = None
+        domain_regex = re.compile(r'^(https?://(?:www\.)?\w+\.\w{2,3}(?:\.\w{2})?)')
+        match = domain_regex.search(parsed_url)
+        if match:
+            logo_image_url = str(f"{match.group(1)}{logo_url}")
+
         website_html = response.body
-        print(website_html)
-        logo_url = response.css('img[src*=logo]::attr(src)').get()
+        #print(website_html)
 
         phone_numbers = []
 
@@ -46,7 +55,7 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
         phone_regex = r'\+?\d{1,3}[-.\s]?\(?\d{2,}\)?[-.\s]?\d{4}[-.\s]?\d{4}'
         phone_regex = r'(?:\+[\d-]+)?\s*(?:\([\d-]+\)|[\d-]+)(?:\s*(?:ext\.?|\bex)?\s*[\d-]+)*'
         # phone_regex = "^\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$"
-        #phone_numbers = re.findall(phone_regex, response.text)
+        # phone_numbers = re.findall(phone_regex, response.text)
 
         brazilian_phone_pattern = r"\+55\s*\d{2}\s*(?:\d{4,5}[-\s]?\d{4}|\d{8})"
         brazilian_phone_pattern = r"(?:\+?\d{1,3}[- ]?)?\(?\d{2,3}\)?[- ]?\d{4,5}[- ]?\d{4}"
@@ -66,7 +75,7 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
             for number in phone_numbers:
                 if '.' not in number and ',' not in number and len(number) >= 12:
                     good_numbers.append(number)
-        print('good> ',good_numbers)
+        print('good> ', good_numbers)
         yield {'url_collected': response.url,
-               'logo_url': logo_url,
+               'logo_url': logo_image_url,
                'phone_numbers': good_numbers}
