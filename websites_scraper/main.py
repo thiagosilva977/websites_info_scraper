@@ -2,12 +2,16 @@ import logging
 import os
 
 import click
+from scrapy.crawler import CrawlerProcess
+
+from websites_scraper.spiders.google_contact_search import GoogleContactSearchSpider
+from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
 
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
 
 @click.command("scrape-url")
-@click.option("--url", type=click.STRING, help="", default='https://www.illion.com.au/contact-us/')
+@click.option("--url", type=click.STRING, help="", default=None)
 def main(url: str):
     """
     Main program execution.
@@ -27,9 +31,6 @@ def main(url: str):
         os.remove('output.json')
     except FileNotFoundError:
         pass
-
-    from scrapy.crawler import CrawlerProcess
-    from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
 
     process = CrawlerProcess(settings={'BOT_NAME': 'websites_scraper',
                                        'ROBOTSTXT_OBEY': False,
@@ -73,9 +74,6 @@ def parameter_creation(search_string: str):
         os.remove('output_parameters.json')
     except FileNotFoundError:
         pass
-
-    from scrapy.crawler import CrawlerProcess
-    from websites_scraper.spiders.google_contact_search import GoogleContactSearchSpider
 
     process = CrawlerProcess(settings={'BOT_NAME': 'parameter_creation',
                                        'ROBOTSTXT_OBEY': True,
