@@ -55,9 +55,6 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
         if all_logo_values is not None and 'http' not in all_logo_values:
             all_logo_values = str(f"{domain_website_value}{all_logo_values}")
 
-        website_html = response.body
-        # print(website_html)
-
         phone_numbers = []
 
         # Coletar todos os números de telefone usando regex

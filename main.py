@@ -1,3 +1,7 @@
+import os
+import time
+import traceback
+
 import click
 import logging
 
@@ -14,12 +18,22 @@ def main(url: str,
     Main program execution.
     https://www.randomlists.com/urls
 
+    bash to output docker files
+    docker run -it -v /path/to/local/folder:/data scrapy-image scrapy crawl spider_name -o /data/output.json
+
+
     :type url: object
     :param is_running_local: If program is running on local machine.
     :return:
     """
     logging.debug(str(f"Initializing data collector"))
     logging.info(str(f"Searching url {url}"))
+
+    try:
+        os.remove('output.json')
+    except FileNotFoundError:
+        pass
+
 
     from scrapy.crawler import CrawlerProcess
     from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
