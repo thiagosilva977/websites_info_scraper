@@ -21,6 +21,7 @@ setup(
         "fastparquet>=0.8.1",
         "pyarrow>=10.0.1",
         "scrapy>=2.8.0",
+        "googlesearch-python>=1.1.0",
     ],
     entry_points={
         'console_scripts': [

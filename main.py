@@ -34,16 +34,16 @@ def main(url: str,
     except FileNotFoundError:
         pass
 
-
     from scrapy.crawler import CrawlerProcess
     from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
+    from websites_scraper.spiders.google_contact_search import GoogleContactSearchSpider
 
     process = CrawlerProcess(settings={'BOT_NAME': 'websites_scraper',
                                        'ROBOTSTXT_OBEY': False,
                                        'CONCURRENT_ITEMS': 32,
                                        'CONCURRENT_REQUESTS_PER_DOMAIN': 16,
                                        'CONCURRENT_REQUESTS_PER_IP': 16,
-                                       'DOWNLOAD_TIMEOUT': 2,
+                                       'DOWNLOAD_TIMEOUT': 5,
                                        'FEED_EXPORT_ENCODING': 'utf-8',
                                        'NEWSPIDER_MODULE': 'websites_scraper.spiders',
                                        'REQUEST_FINGERPRINTER_IMPLEMENTATION': '2.7',
@@ -65,12 +65,15 @@ def main(url: str,
             'https://www.oakley.com', 'https://www.latimes.com', 'https://www.dmoz.org',
             'https://www.msu.edu', 'https://www.yahoo.com', 'https://www.auda.org.au']
 
-    #urls = ['https://support.google.com/business/answer/7690269?hl=en']
-    #urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
-    #urls = ['https://www.bb.com.br/site/pra-voce/atendimento/']
+    # urls = ['https://support.google.com/business/answer/7690269?hl=en']
+    # urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
+    # urls = ['https://www.bb.com.br/site/pra-voce/atendimento/']
 
-    process.crawl(WebsitesDataCollectionSpider, urls)
+    process.crawl(GoogleContactSearchSpider)
     process.start()
+
+    """process.crawl(WebsitesDataCollectionSpider, urls)
+    process.start()"""
 
 
 if __name__ == '__main__':
