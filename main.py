@@ -25,6 +25,7 @@ def main(url: str,
     from websites_scraper.spiders.websites_data_collection import WebsitesDataCollectionSpider
 
     process = CrawlerProcess(settings={'BOT_NAME': 'websites_scraper',
+                                       'ROBOTSTXT_OBEY': False,
                                        'CONCURRENT_ITEMS': 32,
                                        'CONCURRENT_REQUESTS_PER_DOMAIN': 16,
                                        'CONCURRENT_REQUESTS_PER_IP': 16,
@@ -50,7 +51,9 @@ def main(url: str,
             'https://www.oakley.com', 'https://www.latimes.com', 'https://www.dmoz.org',
             'https://www.msu.edu', 'https://www.yahoo.com', 'https://www.auda.org.au']
 
-    # urls = ['https://www.dmoz.org']
+    urls = ['https://support.google.com/business/answer/7690269?hl=en']
+    urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
+    urls = ['https://en.wikivoyage.org/wiki/Wikivoyage:Phone_numbers']
 
     process.crawl(WebsitesDataCollectionSpider, urls)
     process.start()
