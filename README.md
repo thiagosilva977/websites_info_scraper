@@ -1,13 +1,12 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-    <img src="https://user-images.githubusercontent.com/11250089/211172298-2d4f9f64-d428-450b-822e-858ddf29a0a2.png" alt="Logo" width="140" height="120">
 
-  <h3 align="center">webscraping-docker-template </h3>
+  <h3 align="center">websites_info_scraper</h3>
 
   <p align="center">
-    Just some template to build new web-scraping projects.
-    <br />
+    Collects information specific to website URLs.
+    <br/>
     <a href="https://github.com/thiagosilva977/webscraping-docker-template/issues">Report Bug</a>
     ·
     <a href="https://github.com/thiagosilva977/webscraping-docker-template/pulls">Request Feature</a>
@@ -15,70 +14,28 @@
 </div>
 
 
-
-
-## Topics
-
-[Project Status](#project-status)
-
-[Description](#project-description)
-
-[Features](#features)
-
-[Requirements](#requirements)
-
-[Dependencies and Libraries](#dependencies-and-libraries)
-
-[Directory Tree](#directory-tree)
-
-[Docker Image](#docker-image)
-
-
-## Project Status
-
-<!-- PROJECT STATUS -->
-
-> Project Status: Finished :heavy_check_mark: 
-
 ## Project Description
 
-<p align="justify">
-  Some description.
-</p>
+Application that, given a list of website URLs as input, visits them
+and finds, extracts and outputs the website's url, logo url, icon url and all phone numbers present on the websites.
 
-## Features
+## Getting Started
+Arguments
+- **--url** - Single URL or list of urls (separated by comma "," or just a string list "["item1","item2"]")
+- **--output-path** - Local path to save the output files
 
-:heavy_check_mark: Feature 1  
+### Running local
+``` websites_scraper/main.py --arguments``` 
 
-:heavy_check_mark: Feature 2  
-
-:heavy_check_mark: Feature 3  
-
-:heavy_check_mark: Feature 4  
-
-
-## Requirements
-
-:warning: [Node](https://nodejs.org/en/download/)
-
-
-## Dependencies and Libraries
-
-- [React](https://pt-br.reactjs.org/docs/create-a-new-react-app.html)
-- [React PDF](https://react-pdf.org/)
-
-
-
-## Directory Tree
-
-
-
-
-## Docker Image
+### Docker
 #### Pull Image
-`docker pull thiago977/webscraping-template:latest`
-#### Run image
-`docker run thiago977/webscraping-template:latest execute-scraper`
+`docker pull thiago977/websites_info_scraper:latest`
+#### Run
+`docker run thiago977/websites_info_scraper:latest scrape-url --arguments`
+
+Example: 
+```docker run thiago977/websites_info_scraper:latest scrape-url --url="https://www.zendesk.com.br/blog/contact-us-page/,https://quataalimentos.com.br/fale-conosco/,https://www.estadao.com.br/fale-conosco" --output-path="/home"```
+
 
 
 
