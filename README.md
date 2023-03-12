@@ -49,6 +49,7 @@ I just added an option to search on google and get some urls to use as input.
 ### Next improvements
 - Better precision on parsing phone numbers
 - More input parameters to customize the configs
+- Better documentation
 ### Time report
 ![image](https://user-images.githubusercontent.com/11250089/224531255-6ff82cef-acd1-4170-8e92-b2aa0ff5ef8f.png)
 
