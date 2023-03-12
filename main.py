@@ -17,8 +17,8 @@ def main(url: str):
     docker run -it -v /path/to/local/folder:/data scrapy-image scrapy crawl spider_name -o /data/output.json
 
 
-    :type url: object
-    :return:
+    :type url: url to search
+    :return: .json file
     """
     logging.debug(str(f"Initializing data collector"))
     logging.info(str(f"Searching url {url}"))
@@ -36,7 +36,7 @@ def main(url: str):
                                        'CONCURRENT_ITEMS': 32,
                                        'CONCURRENT_REQUESTS_PER_DOMAIN': 16,
                                        'CONCURRENT_REQUESTS_PER_IP': 16,
-                                       'DOWNLOAD_TIMEOUT': 5,
+                                       'DOWNLOAD_TIMEOUT': 6,
                                        'FEED_EXPORT_ENCODING': 'utf-8',
                                        'NEWSPIDER_MODULE': 'websites_scraper.spiders',
                                        'REQUEST_FINGERPRINTER_IMPLEMENTATION': '2.7',
@@ -58,21 +58,19 @@ def main(url: str):
 @click.option("--search-string", type=click.STRING, help="", default='contact us')
 def parameter_creation(search_string: str):
     """
-    Main program execution.
-    https://www.randomlists.com/urls
+    Creates parameters to use in tests.
 
     bash to output docker files
     docker run -it -v /path/to/local/folder:/data scrapy-image scrapy crawl spider_name -o /data/output.json
 
-
-    :param search_string:
-    :return:
+    :param search_string: string to search on Google
+    :return: .json file
     """
     logging.debug(str(f"Initializing data collector"))
     logging.info(str(f"Searching parameters on google: {search_string}"))
 
     try:
-        os.remove('output_string.json')
+        os.remove('output_parameters.json')
     except FileNotFoundError:
         pass
 

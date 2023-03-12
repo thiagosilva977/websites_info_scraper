@@ -1,2 +1,2 @@
 include README.md
-include scrapertype_scrapername/assets/scraper_parameters.parquet
+include assets/first_results.json

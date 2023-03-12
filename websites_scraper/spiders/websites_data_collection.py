@@ -19,6 +19,11 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
     name = "websites_data_collection"
 
     def start_requests(self):
+        """
+        Function responsible for doing requests
+
+        :return: scrapy request targeting to parse function
+        """
         if isinstance(self._input_url, list):
             for url_to_scrape in self._input_url:
                 yield scrapy.Request(url=url_to_scrape, callback=self.parse)
@@ -38,46 +43,59 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
                 yield scrapy.Request(url=self._input_url, callback=self.parse)
 
     def parse(self, response, **kwargs):
-        parsed_url = response.url
+        """
+        Function responsible for parsing scrapy.Request content.
 
-        logo_url = response.css('link[rel="shortcut icon"]::attr(href)').extract_first()
+        :param response: scrapy response (like requests library)
+        :param kwargs: additional arguments
+        :return: collected data dict
+        """
+        # Find website url
+        parsed_website_url = response.url
 
-        logo_icon_url = None
-        domain_website_value = None
+        # Find icon url
+        base_icon_url_href = response.css('link[rel="shortcut icon"]::attr(href)').extract_first()
+        parsed_logo_icon_url = None
+        parsed_website_domain = None
         domain_regex = re.compile(r'^(https?://(?:www\.)?\w+\.\w{2,3}(?:\.\w{2})?)')
-        match = domain_regex.search(parsed_url)
-        if match:
-            domain_website_value = match.group(1)
-            if logo_url is not None and "http" not in logo_url:
-                logo_icon_url = str(f"{match.group(1)}{logo_url}")
-            elif logo_url is not None:
-                logo_icon_url = str(f"{logo_url}")
+        match_domain = domain_regex.search(parsed_website_url)
+        if match_domain:
+            parsed_website_domain = match_domain.group(1)
+            if base_icon_url_href is not None and "http" not in base_icon_url_href:
+                parsed_logo_icon_url = str(f"{match_domain.group(1)}{base_icon_url_href}")
+            elif base_icon_url_href is not None:
+                parsed_logo_icon_url = str(f"{base_icon_url_href}")
 
-        all_logo_values = response.css('img[src*=logo]::attr(src)').get()
+        # Find some img src that contains "logo"
+        parsed_logo_url = response.css('img[src*=logo]::attr(src)').get()
 
-        if all_logo_values is not None and 'http' not in all_logo_values:
-            all_logo_values = str(f"{domain_website_value}{all_logo_values}")
+        if parsed_logo_url is not None and 'http' not in parsed_logo_url:
+            parsed_logo_url = str(f"{parsed_website_domain}{parsed_logo_url}")
 
-        phone_numbers = []
+        # Find phone numbers
+        phone_numbers_list = []
 
         brazilian_phone_pattern = r"(?:\+?\d{1,3}[- ]?)?\(?\d{2,3}\)?[- ]?\d{4,5}[- ]?\d{4}"
         brazilian_numbers = re.findall(brazilian_phone_pattern, response.text)
 
-        phone_numbers = phone_numbers + brazilian_numbers
+        phone_numbers_list = phone_numbers_list + brazilian_numbers
 
         us_phone_pattern = r"(?:^|\s)(((?:\+|0{2})(?:49|43|33)[-\. ]?|0)([1-9]\d{1,2}[-\. ]?|\([1-9]\d{1,2}\)[-\. " \
                            r"]?)(\d{6,9}|\d{2,3}[-\. ]\d{4,6}))"
         us_numbers = re.findall(us_phone_pattern, response.text)
 
-        phone_numbers = phone_numbers + us_numbers
+        phone_numbers_list = phone_numbers_list + us_numbers
 
-        good_numbers = []
-        if isinstance(phone_numbers, list):
-            phone_numbers = set(phone_numbers)
-            for number in phone_numbers:
+        parsed_phone_numbers_list = []
+        if isinstance(phone_numbers_list, list):
+            # Remove duplicates
+            phone_numbers_list = set(phone_numbers_list)
+            # Filter results
+            for number in phone_numbers_list:
                 if '.' not in number and ',' not in number and len(number) >= 12:
-                    good_numbers.append(number)
-        yield {'url_collected': response.url,
-               'icon_url': logo_icon_url,
-               'logo_url': all_logo_values,
-               'phone_numbers': good_numbers}
+                    parsed_phone_numbers_list.append(number)
+        # Return collected data to scrapy
+        yield {'url_collected': parsed_website_url,
+               'icon_url': parsed_logo_icon_url,
+               'logo_url': parsed_logo_url,
+               'phone_numbers': parsed_phone_numbers_list}
