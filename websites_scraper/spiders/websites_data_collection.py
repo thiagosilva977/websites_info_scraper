@@ -39,14 +39,24 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
         logo_url = response.css('link[rel="shortcut icon"]::attr(href)').extract_first()
         print(logo_url)
 
-        logo_image_url = None
+        logo_icon_url = None
+        domain_website_value = None
         domain_regex = re.compile(r'^(https?://(?:www\.)?\w+\.\w{2,3}(?:\.\w{2})?)')
         match = domain_regex.search(parsed_url)
         if match:
-            logo_image_url = str(f"{match.group(1)}{logo_url}")
+            domain_website_value = match.group(1)
+            if logo_url is not None and "http" not in logo_url:
+                logo_icon_url = str(f"{match.group(1)}{logo_url}")
+            elif logo_url is not None:
+                logo_icon_url = str(f"{logo_url}")
+
+        all_logo_values = response.css('img[src*=logo]::attr(src)').get()
+
+        if all_logo_values is not None and 'http' not in all_logo_values:
+            all_logo_values = str(f"{domain_website_value}{all_logo_values}")
 
         website_html = response.body
-        #print(website_html)
+        # print(website_html)
 
         phone_numbers = []
 
@@ -77,5 +87,6 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
                     good_numbers.append(number)
         print('good> ', good_numbers)
         yield {'url_collected': response.url,
-               'logo_url': logo_image_url,
+               'icon_url': logo_icon_url,
+               'logo_url': all_logo_values,
                'phone_numbers': good_numbers}
