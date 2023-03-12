@@ -17,7 +17,8 @@ class GoogleContactSearchSpider(scrapy.Spider):
         for url in search(search_query, num_results=100):
             yield scrapy.Request(url, callback=self.parse_website)
 
-    def parse_website(self, response):
+    @staticmethod
+    def parse_website(response):
         # Filter URLs that don't contain "contact" or "about" in the path or domain
         if not re.search(r"(contact|about)", response.url, re.IGNORECASE):
             return
