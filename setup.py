@@ -8,7 +8,7 @@ setup(
     license='',
     author='Thiago Silva',
     author_email='someemail@email.com',
-    description='Some description.',
+    description='Collect information from an inputted website url',
     setup_requires=['wheel'],
     install_requires=[
         "click>=8.1.2",
