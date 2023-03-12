@@ -1,3 +1,4 @@
+import ast
 import logging
 import re
 
@@ -33,7 +34,13 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
             yield scrapy.Request(url=random_websites_parameters, callback=self.parse)
 
         else:
-            if ',' in self._input_url:
+            if '[' in self._input_url and ']' in self._input_url:
+                my_list = ast.literal_eval(self._input_url)
+                split_urls = my_list
+                for url_to_scrape in split_urls:
+                    yield scrapy.Request(url=url_to_scrape, callback=self.parse)
+
+            elif ',' in self._input_url:
                 split_urls = self._input_url.split(',')
                 for url_to_scrape in split_urls:
                     yield scrapy.Request(url=url_to_scrape, callback=self.parse)
