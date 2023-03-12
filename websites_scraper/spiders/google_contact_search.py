@@ -4,11 +4,16 @@ from googlesearch import search
 
 
 class GoogleContactSearchSpider(scrapy.Spider):
+    def __init__(self, search_input=None, **kwargs):
+        super().__init__(**kwargs)
+        if search_input is None:
+            search_input = 'contact-us'
+        self._input_string = search_input
     name = "google_contact"
     start_urls = ["https://www.google.com/"]
 
     def parse(self, response, **kwargs):
-        search_query = "contact us"
+        search_query = self._input_string
         for url in search(search_query, num_results=100):
             yield scrapy.Request(url, callback=self.parse_website)
 

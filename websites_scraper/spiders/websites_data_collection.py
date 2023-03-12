@@ -5,6 +5,7 @@ import scrapy
 import logging
 import concurrent.futures
 
+from websites_scraper.testing_parameters import random_websites_parameters
 logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
 
 
@@ -12,11 +13,7 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
     def __init__(self, input_url=None, **kwargs):
         super().__init__(**kwargs)
         if input_url is None:
-            input_url = ['https://docs.scrapy.org/en/latest/intro/tutorial.html#our-first-spider',
-                         'https://stackoverflow.com/questions/53733190/is-scrapy-compatible-with-multiprocessing',
-                         'https://www.illion.com.au/contact-us/',
-                         'https://www.oakley.com', 'https://www.latimes.com', 'https://www.dmoz.org',
-                         'https://www.msu.edu', 'https://www.yahoo.com', 'https://www.auda.org.au']
+            input_url = random_websites_parameters
         self._input_url = input_url
 
     name = "websites_data_collection"
@@ -29,6 +26,11 @@ class WebsitesDataCollectionSpider(scrapy.Spider):
             for url_to_scrape in self._input_url:
                 print('aaa')
                 yield scrapy.Request(url=url_to_scrape, callback=self.parse)
+
+        elif self._input_url is None:
+            logging.warning('Input URL received is None. Changing to testing URLs ...')
+            yield scrapy.Request(url=random_websites_parameters, callback=self.parse)
+
         else:
             yield scrapy.Request(url=self._input_url, callback=self.parse)
 

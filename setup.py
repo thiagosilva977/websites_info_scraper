@@ -25,7 +25,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            "scrape-url=main:main"
+            "scrape-url=main:main",
+            "create-parameters=main:parameter_creation"
         ]
     },
     include_package_data=True

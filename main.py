@@ -10,10 +10,7 @@ logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S
 
 @click.command("scrape-url")
 @click.option("--url", type=click.STRING, help="", default='https://www.illion.com.au/contact-us/')
-@click.option("--is-running-local/--is-not-running-local", default=False)
-def main(url: str,
-         is_running_local: bool,
-         ):
+def main(url: str):
     """
     Main program execution.
     https://www.randomlists.com/urls
@@ -23,7 +20,6 @@ def main(url: str,
 
 
     :type url: object
-    :param is_running_local: If program is running on local machine.
     :return:
     """
     logging.debug(str(f"Initializing data collector"))
@@ -59,22 +55,60 @@ def main(url: str,
 
     # process = CrawlerProcess()
 
-    urls = ['https://docs.scrapy.org/en/latest/intro/tutorial.html#our-first-spider',
-            'https://stackoverflow.com/questions/53733190/is-scrapy-compatible-with-multiprocessing',
-            'https://www.illion.com.au/contact-us/',
-            'https://www.oakley.com', 'https://www.latimes.com', 'https://www.dmoz.org',
-            'https://www.msu.edu', 'https://www.yahoo.com', 'https://www.auda.org.au']
+    """process.crawl(GoogleContactSearchSpider)
+    process.start()"""
 
-    # urls = ['https://support.google.com/business/answer/7690269?hl=en']
-    # urls = ['https://www.stylemanual.gov.au/grammar-punctuation-and-conventions/numbers-and-measurements/telephone-numbers']
-    # urls = ['https://www.bb.com.br/site/pra-voce/atendimento/']
-
-    process.crawl(GoogleContactSearchSpider)
+    process.crawl(WebsitesDataCollectionSpider, None)
     process.start()
 
-    """process.crawl(WebsitesDataCollectionSpider, urls)
-    process.start()"""
+
+@click.command("create-parameters")
+@click.option("--search-string", type=click.STRING, help="", default='contact us')
+def parameter_creation(search_string: str):
+    """
+    Main program execution.
+    https://www.randomlists.com/urls
+
+    bash to output docker files
+    docker run -it -v /path/to/local/folder:/data scrapy-image scrapy crawl spider_name -o /data/output.json
+
+
+    :param search_string:
+    :return:
+    """
+    logging.debug(str(f"Initializing data collector"))
+    logging.info(str(f"Searching parameters on google: {search_string}"))
+
+    try:
+        os.remove('output_string.json')
+    except FileNotFoundError:
+        pass
+
+    from scrapy.crawler import CrawlerProcess
+    from websites_scraper.spiders.google_contact_search import GoogleContactSearchSpider
+
+    process = CrawlerProcess(settings={'BOT_NAME': 'parameter_creation',
+                                       'ROBOTSTXT_OBEY': True,
+                                       'CONCURRENT_ITEMS': 2,
+                                       'CONCURRENT_REQUESTS_PER_DOMAIN': 2,
+                                       'CONCURRENT_REQUESTS_PER_IP': 2,
+                                       'DOWNLOAD_TIMEOUT': 5,
+                                       'FEED_EXPORT_ENCODING': 'utf-8',
+                                       'NEWSPIDER_MODULE': 'websites_scraper.spiders',
+                                       'REQUEST_FINGERPRINTER_IMPLEMENTATION': '2.7',
+                                       'RETRY_ENABLED': True,
+                                       'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408],
+                                       'RETRY_TIMES': 5,
+                                       'FEED_FORMAT': 'json',
+                                       'FEED_URI': 'output_parameters.json',
+                                       'SPIDER_MODULES': ['websites_scraper.spiders'],
+                                       'TWISTED_REACTOR': 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'}
+
+                             )
+
+    process.crawl(GoogleContactSearchSpider, search_string)
+    process.start()
 
 
 if __name__ == '__main__':
-    main()
+    parameter_creation()
