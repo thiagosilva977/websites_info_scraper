@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='scr',
+    name='websites_info_scraper',
     version='1.0.0',
     packages=find_packages(),
     url='',
@@ -13,7 +13,7 @@ setup(
     install_requires=[
         "click>=8.1.2",
         "setuptools>=62.1.0",
-        "requests>=2.27.1",
+        "requests>=2.25.1",
         "bs4>=0.0.1",
         "Shapely>=1.8.1.post1",
         "pymongo>=4.1.1",
